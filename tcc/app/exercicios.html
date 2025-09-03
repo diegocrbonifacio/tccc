@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/app.css">
+    <title>Detalhes do Treino</title>
+</head>
+<body>
+    <header class="navbar">
+        <nav class="nav-left">
+            <a href="dashboard.html" class="logo">Voltar</a>
+        </nav>
+        <nav class="nav-right">
+            <button id="theme-toggle" class="theme-toggle-button">
+                <span id="theme-icon">&#x2600;&#xFE0F;</span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h1 id="titulo-treino">Carregando treino...</h1>
+        <div id="lista-exercicios"></div>
+        <button id="complete-workout-btn" class="cta-button">Marcar Treino como Concluído</button>
+    </main>
+
+    <!-- ESTRUTURA DO MODAL (POP-UP) -->
+    <div id="completion-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-icon">&#x2705;</span>
+            <h2>Parabéns!</h2>
+            <p>O seu progresso foi salvo com sucesso.</p>
+            <button id="modal-close-btn" class="cta-button">Ok</button>
+        </div>
+    </div>
+
+    <script src="../assets/js/exercicios.js"></script>
+</body>
+</html>

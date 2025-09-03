@@ -1,0 +1,367 @@
+/* --- Variáveis de Tema --- */
+:root {
+    --bg-color-main: #f4f7f9;
+    --bg-color-navbar: #ffffff;
+    --text-color: #2d3748;
+    --text-secondary-color: #718096;
+    --card-bg-color: #ffffff;
+    --primary-color: #4a69bd;
+    --border-color: #e2e8f0;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --progress-bg: #e9ecef;
+}
+
+body.dark-theme {
+    --bg-color-main: #1a202c;
+    --bg-color-navbar: #2d3748;
+    --text-color: #e2e8f0;
+    --text-secondary-color: #a0aec0;
+    --card-bg-color: #2d3748;
+    --primary-color: #72a4e4;
+    --border-color: #4a5568;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --progress-bg: #4a5568;
+}
+
+/* --- Estilos de Base e Tipografia --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color-main);
+    color: var(--text-color);
+    line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ... (restante do seu CSS existente) ... */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--bg-color-navbar);
+    box-shadow: 0 2px 4px var(--shadow-color);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.user-info {
+    font-weight: 600;
+    color: var(--text-secondary-color);
+}
+
+.theme-toggle-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary-color);
+    transition: color 0.3s ease;
+}
+
+.navbar-icon-link {
+    color: var(--text-secondary-color);
+    transition: color 0.3s ease;
+}
+
+.navbar-icon-link:hover {
+    color: var(--primary-color);
+}
+
+.main-content {
+    padding: 2rem 2rem;
+}
+
+.main-content h1 {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.treino-card {
+    background-color: var(--card-bg-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+}
+
+.treino-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px var(--shadow-color);
+}
+
+.treino-card h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+    font-size: 1.25rem;
+}
+
+.treino-card p {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    color: var(--text-secondary-color);
+}
+
+.card-link {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.card-link:hover {
+    opacity: 0.85;
+}
+
+#lista-exercicios {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.progress-container {
+    background-color: var(--progress-bg);
+    border-radius: 99px;
+    height: 8px;
+    width: 100%;
+    overflow: hidden;
+    margin-top: auto;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.5s ease-in-out;
+}
+
+.progress-text {
+    font-size: 0.75rem !important;
+    color: var(--text-secondary-color) !important;
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.5rem !important;
+    text-align: right;
+}
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+}
+
+.profile-card {
+    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-color);
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.profile-header {
+    text-align: center;
+    padding: 2rem;
+}
+
+.profile-header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+}
+
+.profile-header p {
+    color: var(--text-secondary-color);
+    margin: 0.25rem 0 0 0;
+}
+
+.profile-stats {
+    display: flex;
+    justify-content: space-around;
+    background-color: var(--bg-color-main);
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item span {
+    font-size: 0.875rem;
+    color: var(--text-secondary-color);
+}
+
+.stat-item strong {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.profile-footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary-color);
+}
+
+.profile-pic-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 1rem auto;
+}
+
+#profile-pic {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid var(--primary-color);
+    object-fit: cover;
+}
+
+#upload-input {
+    display: none;
+}
+
+.upload-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid var(--card-bg-color);
+    transition: transform 0.2s ease;
+}
+
+.upload-icon:hover {
+    transform: scale(1.1);
+}
+
+.upload-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.cta-button {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 2rem auto 0 auto;
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+/* --- NOVOS ESTILOS PARA O MODAL (POP-UP) --- */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* Escondido por defeito */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--card-bg-color);
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-icon {
+    font-size: 3rem;
+}
+
+.modal-content h2 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+.modal-content p {
+    color: var(--text-secondary-color);
+    margin-bottom: 2rem;
+}
+
+.modal-content .cta-button {
+    display: inline-block; /* Alterado para permitir a centralização */
+    width: auto;
+    padding: 0.75rem 2.5rem;
+    margin: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

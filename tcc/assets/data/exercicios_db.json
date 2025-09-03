@@ -1,0 +1,32 @@
+{
+    "1": [
+        { "nome": "Agachamento Livre", "series": "4", "repeticoes": "10-12" },
+        { "nome": "Leg Press 45°", "series": "4", "repeticoes": "10-12" },
+        { "nome": "Cadeira Extensora", "series": "3", "repeticoes": "15" },
+        { "nome": "Mesa Flexora", "series": "3", "repeticoes": "15" }
+    ],
+    "2": [
+        { "nome": "Rosca Direta com Barra", "series": "4", "repeticoes": "10-12" },
+        { "nome": "Tríceps na Polia", "series": "4", "repeticoes": "10-12" },
+        { "nome": "Rosca Alternada com Halteres", "series": "3", "repeticoes": "12-15" },
+        { "nome": "Tríceps Francês", "series": "3", "repeticoes": "12-15" }
+    ],
+    "3": [
+        { "nome": "Corrida na Esteira", "series": "1", "repeticoes": "20-30 min" },
+        { "nome": "Bicicleta Ergométrica", "series": "1", "repeticoes": "20-30 min" },
+        { "nome": "Pular Corda", "series": "5", "repeticoes": "3 min" }
+    ],
+    "4": [
+        { "nome": "Abdominal Supra", "series": "4", "repeticoes": "20" },
+        { "nome": "Prancha Isométrica", "series": "4", "repeticoes": "45 seg" },
+        { "nome": "Elevação de Pernas", "series": "4", "repeticoes": "15" }
+    ],
+    "5": [
+        { "nome": "Remada Curvada", "series": "4", "repeticoes": "10" },
+        { "nome": "Puxada Frontal", "series": "4", "repeticoes": "12" }
+    ],
+    "6": [
+        { "nome": "Desenvolvimento com Halteres", "series": "4", "repeticoes": "12" },
+        { "nome": "Elevação Lateral", "series": "3", "repeticoes": "15" }
+    ]
+}

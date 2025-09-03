@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil</title>
+    <link rel="stylesheet" href="../assets/css/app.css">
+</head>
+<body>
+    <header class="navbar">
+        <nav class="nav-left">
+            <a href="dashboard.html" class="logo">Voltar</a>
+        </nav>
+        <nav class="nav-right">
+            <button id="theme-toggle" class="theme-toggle-button">
+                <span id="theme-icon">&#x2600;&#xFE0F;</span>
+            </button>
+        </nav>
+    </header>
+    <main class="main-content">
+        <div class="profile-container">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-pic-wrapper">
+                        <img id="profile-pic" src="https://placehold.co/150x150" alt="Foto de Perfil">
+                        <label for="upload-input" class="upload-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        </label>
+                        <input type="file" id="upload-input" accept="image/png, image/jpeg">
+                    </div>
+                    <h1 id="profile-name">Carregando...</h1>
+                    <p id="profile-email">...</p>
+                </div>
+                <div class="profile-stats">
+                    <div class="stat-item"><span>Altura</span><strong id="profile-height">--</strong></div>
+                    <div class="stat-item"><span>Peso</span><strong id="profile-weight">--</strong></div>
+                    <div class="stat-item"><span>Idade</span><strong id="profile-age">--</strong></div>
+                </div>
+                <div class="profile-footer">
+                    <p>Membro desde: <span id="profile-member-since">--</span></p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="../assets/js/perfil.js"></script>
+</body>
+</html>

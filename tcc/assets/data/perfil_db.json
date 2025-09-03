@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "nome": "Ana Silva",
+  "email": "ana.silva@exemplo.com",
+  "altura": "1.65m",
+  "peso": "60kg",
+  "idade": "28 anos",
+  "membroDesde": "Agosto, 2024",
+  "fotoUrl": "https://placehold.co/150x150/4a69bd/ffffff?text=A"
+}

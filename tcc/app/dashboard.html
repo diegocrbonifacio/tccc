@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meus Treinos</title>
+    <link rel="stylesheet" href="../assets/css/app.css" />
+</head>
+<body>
+    <header class="navbar">
+        <nav class="nav-left">
+            <a href="../home.html"><div class="logo">Logo</div></a>
+        </nav>
+        <nav class="nav-right">
+            <span id="user-name" class="user-info">Olá, Ana</span>
+            <a href="perfil.html" class="navbar-icon-link" title="Meu Perfil">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </a>
+            <button id="theme-toggle" class="theme-toggle-button" title="Alternar Tema">
+                <span id="theme-icon">&#x2600;&#xFE0F;</span>
+            </button>
+        </nav>
+    </header>
+    <main class="main-content">
+        <h1>Escolha seu Treino</h1>
+        <div id="card-container" class="card-container"></div>
+    </main>
+    <script src="../assets/js/dashboard.js"></script>
+</body>
+</html>

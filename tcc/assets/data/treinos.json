@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "titulo": "Treino de Perna",
+        "descricao": "Fortaleça quadríceps, isquiotibiais e glúteos.",
+        "link": "exercicios.html?id=1"
+    },
+    {
+        "id": 2,
+        "titulo": "Treino de Braço",
+        "descricao": "Exercícios para bíceps, tríceps e antebraço.",
+        "link": "exercicios.html?id=2"
+    },
+    {
+        "id": 3,
+        "titulo": "Treino de Cardio",
+        "descricao": "Melhore sua resistência e saúde cardiovascular.",
+        "link": "exercicios.html?id=3"
+    },
+    {
+        "id": 4,
+        "titulo": "Treino de Abdômen",
+        "descricao": "Foque no fortalecimento da região abdominal.",
+        "link": "exercicios.html?id=4"
+    },
+    {
+        "id": 5,
+        "titulo": "Treino de Costas",
+        "descricao": "Desenvolva os músculos dorsais e a lombar.",
+        "link": "exercicios.html?id=5"
+    },
+    {
+        "id": 6,
+        "titulo": "Treino de Ombros",
+        "descricao": "Exercícios para deltoides e manguito rotador.",
+        "link": "exercicios.html?id=6"
+    }
+]

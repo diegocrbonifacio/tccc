@@ -1,0 +1,165 @@
+/* --- Base e Variáveis --- */
+:root {
+    --bg-color-main: #f4f7fa;
+    --bg-color-navbar: #fff;
+    --text-color: #333;
+    --text-color-navbar: #555;
+    --card-bg-color: #fff;
+    --primary-color: #4a69bd;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+}
+
+body.dark-theme {
+    --bg-color-main: #1c2a38;
+    --bg-color-navbar: #2c3e50;
+    --text-color: #e0e6ed;
+    --text-color-navbar: #ccc;
+    --card-bg-color: #3b526d;
+    --primary-color: #72a4e4;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color-main);
+    color: var(--text-color);
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* --- Estilos do Header (Navbar) --- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: var(--bg-color-navbar);
+    box-shadow: 0 2px 4px var(--shadow-color);
+    transition: background-color 0.5s ease;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.login-button {
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--primary-color);
+    padding: 8px 16px;
+    border: 2px solid var(--primary-color);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.theme-toggle-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-color-navbar);
+}
+
+/* --- Secção Principal (Hero) --- */
+.hero-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 80px 20px;
+    background-color: var(--card-bg-color);
+    transition: background-color 0.5s ease;
+}
+
+.hero-content {
+    max-width: 700px;
+}
+
+.hero-title {
+    font-size: 48px;
+    color: var(--primary-color);
+    margin: 0 0 15px 0;
+}
+
+.hero-subtitle {
+    font-size: 20px;
+    color: var(--text-color-navbar);
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.cta-button {
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    background-color: var(--primary-color);
+    padding: 15px 40px;
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Secção de Funcionalidades (Features) --- */
+.features-section {
+    padding: 60px 40px;
+    text-align: center;
+}
+
+.features-section h2 {
+    font-size: 32px;
+    color: var(--primary-color);
+    margin-bottom: 40px;
+}
+
+.features-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.feature-card {
+    background-color: var(--card-bg-color);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    max-width: 300px;
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px var(--shadow-color);
+}
+
+.feature-card h3 {
+    font-size: 22px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.feature-card p {
+    font-size: 16px;
+    color: var(--text-color-navbar);
+    line-height: 1.5;
+}
