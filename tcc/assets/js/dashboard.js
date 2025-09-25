@@ -3,7 +3,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeIcon = document.getElementById('theme-icon');
     const body = document.body;
     const userNameElement = document.getElementById('user-name');
-    if (userNameElement) userNameElement.textContent = 'Olá, Ana';
+
+    function obterSessao() {
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        const access_token = localStorage.getItem("access_token");
+        const refresh_token = localStorage.getItem("refresh_token");
+        return { usuario, access_token, refresh_token };
+    }
+
+    sessaoUsuario = obterSessao();
+
+    if (userNameElement) userNameElement.textContent = `Olá, ${sessaoUsuario.usuario.nome}`;
 
     function setTheme(theme) {
         if (theme === 'dark') {
