@@ -28,13 +28,14 @@
         <h2 class="titulo-formulario">Login</h2>
         <div class="grupo-input">
           <label for="login-email">Email:</label>
-          <input type="email" id="login-email" required>
+          <input type="email" name="email_usuario" id="login-email" required>
         </div>
         <div class="grupo-input">
           <label for="login-senha">Senha:</label>
-          <input type="password" id="login-senha" required>
+          <input type="password" name="senha_usuario" id="login-senha" required>
         </div>
-        <button type="submit" class="botao-enviar">Entrar</button>
+        <button type="submit"  class="botao-enviar">Entrar</button>
+        <p id="msg-error" style="color: red"></p>
       </form>
       <form id="form-cadastro" class="caixa-formulario" action="app/dashboard.html">
         <h2 class="titulo-formulario">Criar Conta</h2>
