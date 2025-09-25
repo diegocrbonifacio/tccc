@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // a
     // Evento para o botão de concluir treino
     if (completeWorkoutBtn) {
         completeWorkoutBtn.addEventListener('click', () => {
