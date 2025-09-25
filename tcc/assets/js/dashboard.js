@@ -31,13 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
 
         listaDeTreinos.forEach(treino => {
+            const progresso = dadosDeProgresso[treino.id_treino] || 0;
+
             const cardHTML = `
                 <div class="treino-card">
                     <img src="${treino.url_imagem_treino}" alt="${treino.nome_treino}" class="card-image"/>
                     <div class="card-content">
                         <h2>${treino.nome_treino}</h2>
                         <p>${treino.descricao_treino}</p>
-                        <a href="detalhes.html?id=${treino.id_treino}" class="card-link">Ver Treino</a>
+                        <a href="exercicios.html?id=${treino.id_treino}" class="card-link">Ver Treino</a>
                     </div>
                 </div>
             `;
