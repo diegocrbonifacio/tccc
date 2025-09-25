@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const abaCadastro = document.getElementById('aba-cadastro');
     const formLogin = document.getElementById('form-login');
     const formCadastro = document.getElementById('form-cadastro');
-    const msgErro = document.getElementById('msg-error');
+    const msgErroLogin = document.querySelector('.msg-error-login');
+    const msgErroCadastro = document.querySelector('.msg-error-cadastro');
 
     function salvarSessao({ usuario, access_token, refresh_token }) {
         if (usuario) localStorage.setItem("usuario", JSON.stringify(usuario));
@@ -26,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     if (formLogin) {
-        msgErro.textContent = null
+        msgErroLogin.textContent = null
         formLogin.addEventListener('submit', async (e) => {
             e.preventDefault(); // evita reload da página
 
@@ -50,25 +51,67 @@ document.addEventListener('DOMContentLoaded', () => {
                         access_token: data.result.tokens.access,
                         refresh_token: data.result.tokens.refresh
                     });
+                    window.location.href = "app/dashboard.html";
                 } else {
-                    msgErro.textContent = data.error;
+                    msgErroLogin.textContent = data.error;
                 }
             } catch (err) {
                 console.error(err);
-                msgErro.textContent = "Erro ao conectar com o servidor"
+                msgErroLogin.textContent = "Erro ao conectar com o servidor"
             }
         });
     }
 
     if (abaLogin) {
         abaLogin.addEventListener('click', () => {
-            msgErro.textContent = null
+            msgErroLogin.textContent = null
             ativarAba(abaLogin, formLogin);
         });
     }
 
+    if (formCadastro) {
+        formCadastro.addEventListener('submit', async (e) => {
+            e.preventDefault(); // evita reload da página
+
+            const dados = Object.fromEntries(new FormData(formCadastro).entries());
+
+            // Verifica se senha e confirmar senha são iguais
+            if (dados.senha_usuario !== dados.confirmar_senha) {
+                msgErroCadastro.textContent = "As senhas não conferem!";
+                return;
+            } else {
+                msgErroCadastro.textContent = "";
+            }
+
+            try {
+                const response = await fetch("http://127.0.0.1:8000/usuarios/criar/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dados)
+                });
+
+                const data = await response.json();
+                console.log("Resposta da API:", data);
+
+                if (data.result && data.result.usuario) {
+                    alert("Cadastro realizado com sucesso!");
+                    window.location.href = "index.html";
+                } else if (data.error) {
+                    msgErroCadastro.textContent = data.error;
+                } else {
+                    msgErroCadastro.textContent = "Erro desconhecido ao criar conta.";
+                }
+            } catch (err) {
+                console.error(err);
+                msgErro.textContent = "Erro ao conectar com o servidor.";
+            }
+        });
+    }
+
+
     if (abaCadastro) {
         abaCadastro.addEventListener('click', () => {
+            msgErroCadastro.textContent = null
             ativarAba(abaCadastro, formCadastro);
         });
     }

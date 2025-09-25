@@ -35,23 +35,33 @@
           <input type="password" name="senha_usuario" id="login-senha" required>
         </div>
         <button type="submit"  class="botao-enviar">Entrar</button>
-        <p id="msg-error" style="color: red"></p>
+        <p class="msg-error-login" style="color: red"></p>
       </form>
       <form id="form-cadastro" class="caixa-formulario" action="app/dashboard.html">
         <h2 class="titulo-formulario">Criar Conta</h2>
         <div class="grupo-input">
           <label for="cadastro-nome">Nome Completo:</label>
-          <input type="text" id="cadastro-nome" required>
+          <input type="text" name="nome_usuario" id="cadastro-nome" required>
         </div>
         <div class="grupo-input">
           <label for="cadastro-email">Email:</label>
-          <input type="email" id="cadastro-email" required>
+          <input type="email" name="email_usuario" id="cadastro-email" required>
         </div>
         <div class="grupo-input">
           <label for="cadastro-senha">Senha:</label>
-          <input type="password" id="cadastro-senha" required>
+          <input type="password" name="senha_usuario" id="cadastro-senha" required>
+        </div>
+
+        <div class="grupo-input">
+          <label for="confirmar-senha">Confirmar Senha</label>
+          <input type="password" name="confirmar_senha" id="confirmar-senha" required>
+        </div>
+        <div class="grupo-input">
+          <label for="data-nascimento">Data de nascimento</label>
+          <input type="date" name="data_nascimento" id="data-nascimento" required>
         </div>
         <button type="submit" class="botao-enviar">Cadastrar</button>
+        <p class="msg-error-cadastro" style="color: red"></p>
       </form>
     </section>
   </main>
