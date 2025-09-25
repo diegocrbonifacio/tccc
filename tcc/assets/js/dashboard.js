@@ -31,19 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
         container.innerHTML = '';
 
         listaDeTreinos.forEach(treino => {
-            const progresso = dadosDeProgresso[treino.id] || 0;
             const cardHTML = `
                 <div class="treino-card">
-                    <div>
-                        <h2>${treino.titulo}</h2>
-                        <p>${treino.descricao}</p>
-                    </div>
-                    <div>
-                        <div class="progress-container">
-                            <div class="progress-bar" style="width: ${progresso}%;"></div>
-                        </div>
-                        <p class="progress-text">${progresso}% concluído</p>
-                        <a href="${treino.link}" class="card-link">Ver Treino</a>
+                    <img src="${treino.url_imagem_treino}" alt="${treino.nome_treino}" class="card-image"/>
+                    <div class="card-content">
+                        <h2>${treino.nome_treino}</h2>
+                        <p>${treino.descricao_treino}</p>
+                        <a href="detalhes.html?id=${treino.id_treino}" class="card-link">Ver Treino</a>
                     </div>
                 </div>
             `;
@@ -53,19 +47,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function carregarTreinos() {
         try {
-            const [resTreinos, resProgressoDefault] = await Promise.all([
-                fetch('../assets/data/treinos.json'),
-                fetch('../assets/data/progresso_db.json')
-            ]);
+            const resTreinos = await fetch('http://127.0.0.1:8000/treinos/listar_treinos/');
+            if (!resTreinos.ok) throw new Error('Falha ao buscar treinos');
 
-            const listaDeTreinos = await resTreinos.json();
-            const defaultProgress = await resProgressoDefault.json();
+            const data = await resTreinos.json();
+            const listaDeTreinos = data.result.treinos;
 
+            // Carrega progresso do usuário
             const userProgress = JSON.parse(localStorage.getItem('userProgress')) || {};
-            const finalProgress = { ...defaultProgress, ...userProgress };
-            
-            renderizarCards(listaDeTreinos, finalProgress);
+            const finalProgress = listaDeTreinos.reduce((acc, treino) => {
+                acc[treino.id_treino] = userProgress[treino.id_treino] || 0;
+                return acc;
+            }, {});
 
+            renderizarCards(listaDeTreinos, finalProgress);
         } catch (error) {
             console.error('Falha ao carregar os treinos:', error);
             const container = document.getElementById('card-container');

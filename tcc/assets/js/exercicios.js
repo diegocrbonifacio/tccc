@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         try {
             const [resTreinos, resExercicios] = await Promise.all([
-                fetch('../assets/data/treinos.json'), 
+                fetch('../assets/data/treinos.json'),
                 fetch('../assets/data/exercicios_db.json')
             ]);
             const listaDeTreinos = await resTreinos.json();
@@ -70,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // a
     // Evento para o botão de concluir treino
     if (completeWorkoutBtn) {
         completeWorkoutBtn.addEventListener('click', () => {
