@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="../assets/css/app.css">
+    <style>
+        /* Estilos específicos para esta página, se necessário */
+        .edit-form-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-form-container h1 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--input-background);
+            color: var(--text-color);
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .button-group .cta-button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .save-button {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .cancel-button {
+            background-color: var(--secondary-color);
+            color: #fff;
+        }
+
+        .save-button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .cancel-button:hover {
+            background-color: var(--secondary-hover);
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <nav class="nav-left">
+            <a href="perfil.html" class="logo">Voltar</a>
+        </nav>
+        <nav class="nav-right">
+            <button id="theme-toggle" class="theme-toggle-button">
+                <span id="theme-icon">&#x2600;&#xFE0F;</span>
+            </button>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="edit-form-container">
+            <h1>Editar Perfil</h1>
+            <form id="edit-profile-form">
+                <div class="form-group">
+                    <label for="edit-name">Nome Completo</label>
+                    <input type="text" id="edit-name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-email">Email</label>
+                    <input type="email" id="edit-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-height">Altura (cm)</label>
+                    <input type="number" id="edit-height" name="height" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="edit-weight">Peso (kg)</label>
+                    <input type="number" id="edit-weight" name="weight" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="edit-age">Idade</label>
+                    <input type="number" id="edit-age" name="age">
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="cta-button save-button">Salvar</button>
+                    <a href="perfil.html" class="cta-button cancel-button">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script src="../assets/js/editarperfil.js"></script>
+    <script src="../assets/js/perfil.js"></script>
+</body>
+</html>
