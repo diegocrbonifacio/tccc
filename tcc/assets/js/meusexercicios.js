@@ -74,6 +74,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function mostrarNotificacao(mensagem, tipo = 'sucesso') {
+        // 1. Cria ou obtém o contêiner no body
+        let container = document.getElementById('notification-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'notification-container';
+            document.body.appendChild(container);
+        }
+
+        // 2. Cria a notificação
+        const notificacao = document.createElement('div');
+        notificacao.className = `notification ${tipo}`; // Adiciona classe 'sucesso' ou 'erro'
+        notificacao.textContent = mensagem;
+
+        // 3. Adiciona ao contêiner
+        container.appendChild(notificacao);
+
+        // 4. Remove a notificação após 5 segundos (5000 ms)
+        setTimeout(() => {
+            notificacao.classList.add('hide'); // Adiciona classe para iniciar a animação de saída (CSS)
+
+            // Espera a transição de CSS terminar para remover o elemento
+            notificacao.addEventListener('transitionend', () => {
+                notificacao.remove();
+                // Limpa o contêiner se estiver vazio (opcional)
+                if (container.children.length === 0) {
+                    container.remove();
+                }
+            });
+        }, 5000); // 5000 milissegundos
+    }
+
     // --- Botão para concluir exercícios restantes ---
     function renderizarBotaoConcluir(exercicios, treinoUsuarioId) {
         let botaoConcluir = document.getElementById('btn-concluir-treino');

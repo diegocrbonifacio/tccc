@@ -1,76 +1,144 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const body = document.body;
     const themeToggleBtn = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
-    const body = document.body;
+    const profilePic = document.getElementById('profile-pic');
 
+    // --- Tema ---
     function setTheme(theme) {
         if (theme === 'dark') {
             body.classList.add('dark-theme');
-            if(themeIcon) themeIcon.innerHTML = '&#x1F319;';
+            if (themeIcon) themeIcon.innerHTML = '&#x1F319;';
             localStorage.setItem('theme', 'dark');
         } else {
             body.classList.remove('dark-theme');
-            if(themeIcon) themeIcon.innerHTML = '&#x2600;&#xFE0F;';
+            if (themeIcon) themeIcon.innerHTML = '&#x2600;&#xFE0F;';
             localStorage.setItem('theme', 'light');
         }
     }
-    const savedTheme = localStorage.getItem('theme');
-    setTheme(savedTheme || 'light');
-
-    if(themeToggleBtn) {
+    setTheme(localStorage.getItem('theme') || 'light');
+    if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', () => {
-            const isDark = body.classList.contains('dark-theme');
-            setTheme(isDark ? 'light' : 'dark');
+            setTheme(body.classList.contains('dark-theme') ? 'light' : 'dark');
         });
     }
 
-    const uploadInput = document.getElementById('upload-input');
-    const profilePic = document.getElementById('profile-pic');
+    // --- Sessão ---
+    function obterSessao() {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        const access_token = localStorage.getItem('access_token');
+        const refresh_token = localStorage.getItem('refresh_token');
+        return { usuario, access_token, refresh_token };
+    }
 
-    async function carregarPerfil() {
+    // --- Renovar token ---
+    async function renovarToken(refresh_token) {
         try {
-            const savedImage = localStorage.getItem('profileImage');
-            if (savedImage) {
-                profilePic.src = savedImage;
+            const response = await fetch('http://127.0.0.1:8000/usuarios/refresh_token/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ refresh_token })
+            });
+            const data = await response.json();
+            if (data.result && data.result.access) {
+                localStorage.setItem('access_token', data.result.access);
+                return data.result.access;
             }
-
-            const response = await fetch('../assets/data/perfil_db.json');
-            if (!response.ok) throw new Error('Não foi possível carregar os dados do perfil.');
-            
-            const perfil = await response.json();
-            
-            if (!savedImage && perfil.fotoUrl) {
-                profilePic.src = perfil.fotoUrl;
-            }
-
-            profilePic.alt = `Foto de ${perfil.nome}`;
-            document.getElementById('profile-name').textContent = perfil.nome;
-            document.getElementById('profile-email').textContent = perfil.email;
-            document.getElementById('profile-height').textContent = perfil.altura;
-            document.getElementById('profile-weight').textContent = perfil.peso;
-            document.getElementById('profile-age').textContent = perfil.idade;
-            document.getElementById('profile-member-since').textContent = perfil.membroDesde;
-            document.title = `Perfil de ${perfil.nome}`;
-
-        } catch (error) {
-            console.error("Erro ao carregar perfil:", error);
-            document.getElementById('profile-name').textContent = "Erro ao carregar perfil";
+            return null;
+        } catch (err) {
+            console.error('Erro ao renovar token:', err);
+            return null;
         }
     }
 
-    if(uploadInput) {
-        uploadInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
+    // --- Request com token e renovação automática ---
+    async function requestComToken(url, options = {}) {
+        let { access_token, refresh_token } = obterSessao();
+        if (!access_token || !refresh_token) throw new Error('Token não encontrado');
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const imageDataUrl = e.target.result;
-                profilePic.src = imageDataUrl;
-                localStorage.setItem('profileImage', imageDataUrl);
-            };
-            reader.readAsDataURL(file);
-        });
+        options.headers = {
+            ...options.headers,
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/json'
+        };
+
+        let response = await fetch(url, options);
+        let data = await response.json().catch(() => ({}));
+
+        // Se token expirou, tenta renovar
+        if (response.status === 401 || data?.error?.toLowerCase().includes('token')) {
+            const novoAccess = await renovarToken(refresh_token);
+            if (!novoAccess) {
+                alert('Sessão expirada. Faça login novamente.');
+                window.location.href = 'login.html';
+                throw new Error('Token inválido ou expirado');
+            }
+            options.headers['Authorization'] = `Bearer ${novoAccess}`;
+            response = await fetch(url, options);
+            data = await response.json().catch(() => ({}));
+        }
+
+        return { response, data };
+    }
+
+    // --- Calcular idade ---
+    function calcularIdade(dataNascimento) {
+        if (!dataNascimento) return '- -';
+        const hoje = new Date();
+        const nascimento = new Date(dataNascimento);
+        let idade = hoje.getFullYear() - nascimento.getFullYear();
+        const m = hoje.getMonth() - nascimento.getMonth();
+        if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--;
+        return idade;
+    }
+
+    // --- Carregar dados do usuário ---
+    async function carregarPerfil() {
+        const usuario = JSON.parse(localStorage.getItem('usuario'));
+        if (!usuario) {
+            console.error('Usuário não encontrado no localStorage.');
+            return;
+        }
+
+        const nameEl = document.getElementById('profile-name');
+        if (nameEl) nameEl.textContent = usuario.nome || '- -';
+
+        const emailEl = document.getElementById('profile-email');
+        if (emailEl) emailEl.textContent = usuario.email || '- -';
+
+        const ageEl = document.getElementById('profile-age');
+        if (ageEl) ageEl.textContent = calcularIdade(usuario.data_nascimento);
+
+        document.title = `Perfil de ${usuario.nome || ''}`;
+
+        if (profilePic) {
+            profilePic.alt = `Foto de ${usuario.nome || ''}`;
+        }
+
+        // Histórico do usuário para peso e altura
+        try {
+            const { response, data } = await requestComToken('http://127.0.0.1:8000/usuarios/listar_historico_usuario/');
+            const weightEl = document.getElementById('profile-weight');
+            const heightEl = document.getElementById('profile-height');
+
+            let peso = '- -';
+            let altura = '- -';
+
+            if (response.ok && data && Array.isArray(data.result) && data.result.length > 0) {
+                const ultimoHistorico = data.result[data.result.length - 1];
+                peso = ultimoHistorico.usuario_peso ?? '- -';
+                altura = ultimoHistorico.usuario_altura ?? '- -';
+            }
+
+            if (weightEl) weightEl.textContent = peso;
+            if (heightEl) heightEl.textContent = altura;
+        } catch (err) {
+            console.error('Erro ao buscar histórico:', err);
+            const weightEl = document.getElementById('profile-weight');
+            const heightEl = document.getElementById('profile-height');
+            if (weightEl) weightEl.textContent = '- -';
+            if (heightEl) heightEl.textContent = '- -';
+        }
     }
 
     carregarPerfil();
