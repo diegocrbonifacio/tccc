@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Botão para concluir exercícios restantes ---
-    function renderizarBotaoConcluir(exercicios) {
+    function renderizarBotaoConcluir(exercicios, treinoUsuarioId) {
         let botaoConcluir = document.getElementById('btn-concluir-treino');
         if (botaoConcluir) botaoConcluir.remove();
 
@@ -90,16 +90,88 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('.main-content').appendChild(botaoConcluir);
 
             botaoConcluir.addEventListener('click', async () => {
-                exercicios.forEach(e => e.concluido = true);
-                document.querySelectorAll('.exercicio-checkbox').forEach(cb => cb.checked = true);
-                atualizarBarraProgresso(total, total);
+                botaoConcluir.disabled = true;
+                botaoConcluir.textContent = 'Atualizando...';
 
-                // Chamada opcional para API para atualizar todos como concluídos
-                // await requestComToken(`{{base_url}}/usuarios/concluir_treino/${treinoUsuarioId}/`, { method: 'POST' });
+                try {
+                    // 1️⃣ Atualizar todos os exercícios na API
+                    const payloadExercicios = exercicios.map(e => ({
+                        usuario_exercicio_id: e.id_exercicio_usuario,
+                        concluido: true
+                    }));
 
-                modal.style.display = 'flex';
-                renderizarBotaoConcluir(exercicios);
+                    for (const p of payloadExercicios) {
+                        await requestComToken(
+                            'http://127.0.0.1:8000/usuarios/atualizar_status_exercicio/',
+                            { method: 'PUT', body: JSON.stringify(p) }
+                        );
+                        // Atualiza localmente
+                        const ex = exercicios.find(x => x.id_exercicio_usuario === p.usuario_exercicio_id);
+                        ex.concluido = true;
+                    }
+
+                    // 2️⃣ Atualizar o treino como concluído
+                    const payloadTreino = {
+                        usuario_treino_id: treinoUsuarioId,
+                        treinou: true
+                    };
+
+                    await requestComToken(
+                        'http://127.0.0.1:8000/usuarios/concluir_treino/',
+                        { method: 'PUT', body: JSON.stringify(payloadTreino) }
+                    );
+
+                    // 3️⃣ Atualiza barra de progresso e interface
+                    atualizarBarraProgresso(total, total);
+                    document.querySelectorAll('.btn-concluir-exercicio').forEach(btn => {
+                        const p = document.createElement('p');
+                        p.textContent = 'Concluído';
+                        p.style.fontWeight = 'bold';
+                        p.style.color = 'green';
+                        btn.replaceWith(p);
+                    });
+
+                    // 4️⃣ Exibe modal de sucesso
+                    modal.style.display = 'flex';
+
+                } catch (err) {
+                    mostrarNotificacao(`Erro ao concluir treino: ${err.message}`, 'erro');
+                    botaoConcluir.disabled = false;
+                    botaoConcluir.textContent = 'Marcar treino como concluído';
+                }
             });
+        }
+    }
+
+
+    async function verificarConclusaoTreino(treino) {
+        const todosConcluidos = treino.exercicios.every(e => e.concluido);
+
+        if (todosConcluidos && !treino.concluido) { // evita enviar múltiplas vezes
+            try {
+                const payload = {
+                    usuario_treino_id: treino.id_treino_usuario, // id correto do treino do usuário
+                    treinou: true
+                };
+
+                const { response, data } = await requestComToken(
+                    'http://127.0.0.1:8000/usuarios/atualizar_status_treino/',
+                    {
+                        method: 'PUT', // ou POST, conforme sua API
+                        body: JSON.stringify(payload)
+                    }
+                );
+
+                if (response.ok) {
+                    treino.concluido = true; // marca localmente como concluído
+                    mostrarNotificacao('Treino concluído com sucesso!', 'sucesso');
+                    modal.style.display = 'flex';
+                } else {
+                    mostrarNotificacao(`Erro ao concluir treino: ${data.error || 'Desconhecido'}`, 'erro');
+                }
+            } catch (err) {
+                mostrarNotificacao(`Erro de conexão: ${err.message}`, 'erro');
+            }
         }
     }
 
@@ -147,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!exercicio.concluido) {
                     console.log(exercicio.id_exercicio_usuario)
                     const btn = exercicioCard.querySelector('.btn-concluir-exercicio');
+                    // Dentro do btn.addEventListener de cada exercício:
                     btn.addEventListener('click', async () => {
                         btn.disabled = true;
                         btn.textContent = 'Atualizando...';
@@ -172,12 +245,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                     treino.exercicios.filter(e => e.concluido).length
                                 );
 
-                                // Substitui o botão pelo texto "Concluído"
                                 const p = document.createElement('p');
                                 p.textContent = 'Concluído';
                                 p.style.fontWeight = 'bold';
                                 p.style.color = 'green';
                                 btn.replaceWith(p);
+
+                                // Verifica se todos os exercícios estão concluídos
+                                await verificarConclusaoTreino(treino);
 
                             } else {
                                 mostrarNotificacao(`Erro ao atualizar exercício: ${data.error || 'Desconhecido'}`, 'erro');
