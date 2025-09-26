@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         listaDeTreinos.forEach(treino => {
             // Calcula a porcentagem de progresso
             const totalExercicios = treino.exercicios?.length || 0;
-            const exerciciosConcluidos = progressoUsuario[treino.id_treino] || 0;
+            const exerciciosConcluidos = progressoUsuario[treino.id_treino_usuario] || 0;
             const porcentagem = totalExercicios ? Math.round((exerciciosConcluidos / totalExercicios) * 100) : 0;
 
             const cardHTML = `
@@ -138,11 +138,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const { response, data } = await requestComToken("http://127.0.0.1:8000/usuarios/treinos_usuario/");
-
             if (!response.ok) throw new Error('Falha ao buscar os treinos do usuário');
 
             const listaDeTreinos = data.result?.treinos || [];
-            renderizarCardsTreinosInscritos(listaDeTreinos);
+
+            // Filtrar apenas treinos pendentes
+            const treinosPendentes = listaDeTreinos.filter(t => !t.treinou);
+
+            // Se não houver treinos pendentes, exibe a mensagem
+            if (treinosPendentes.length === 0) {
+                container.innerHTML = '<p>Você ainda não está inscrito em nenhum treino.</p>';
+                return;
+            }
+
+            // Buscar exercícios de cada treino pendente
+            const treinosComExercicios = await Promise.all(
+                treinosPendentes.map(async treino => {
+                    const { data: dataEx } = await requestComToken(
+                        `http://127.0.0.1:8000/usuarios/exercicios_treino_usuario/${treino.id_treino_usuario}/`
+                    );
+                    return { treino, exercicios: dataEx.result?.exercicios || [] };
+                })
+            );
+
+            // Renderizar apenas treinos pendentes
+            container.innerHTML = ''; // limpa container
+            treinosComExercicios.forEach(({ treino, exercicios }) => {
+                const totalExercicios = exercicios.length;
+                const exerciciosConcluidos = exercicios.filter(e => e.concluido).length;
+                const porcentagem = totalExercicios ? Math.round((exerciciosConcluidos / totalExercicios) * 100) : 0;
+
+                const cardHTML = `
+                <div class="treino-card">
+                    <img src="${treino.url_imagem_treino}" alt="${treino.nome_treino}" class="card-image"/>
+                    <div class="card-content">
+                        <h2>${treino.nome_treino}</h2>
+                        <p>${treino.descricao_treino}</p>
+                        <p>Data: ${formatarDataBR(treino.data)}</p>
+
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: ${porcentagem}%;"></div>
+                        </div>
+                        <p>${porcentagem}% concluído</p>
+
+                        <a href="meusexercicios.html?id=${treino.id_treino_usuario}" class="card-link">Ver Treino</a>
+                    </div>
+                </div>
+            `;
+
+                container.innerHTML += cardHTML;
+            });
 
         } catch (error) {
             console.error('Erro ao carregar os treinos:', error);

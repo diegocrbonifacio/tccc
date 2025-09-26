@@ -116,8 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         treinou: true
                     };
 
+                    console.log(payloadTreino)
+
                     await requestComToken(
-                        'http://127.0.0.1:8000/usuarios/concluir_treino/',
+                        'http://127.0.0.1:8000/usuarios/atualizar_status_treino/',
                         { method: 'PUT', body: JSON.stringify(payloadTreino) }
                     );
 
@@ -217,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Se existe botão, adiciona o evento de marcar como concluído
                 if (!exercicio.concluido) {
-                    console.log(exercicio.id_exercicio_usuario)
                     const btn = exercicioCard.querySelector('.btn-concluir-exercicio');
                     // Dentro do btn.addEventListener de cada exercício:
                     btn.addEventListener('click', async () => {
@@ -270,7 +271,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             atualizarBarraProgresso(treino.exercicios.length, treino.exercicios.filter(e => e.concluido).length);
-            renderizarBotaoConcluir(treino.exercicios);
+            renderizarBotaoConcluir(treino.exercicios, treinoUsuarioId);
+
 
             // Eventos de checkboxes individuais
             document.querySelectorAll('.exercicio-checkbox').forEach(cb => {
