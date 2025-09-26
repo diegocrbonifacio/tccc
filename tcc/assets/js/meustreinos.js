@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Código de alternância de tema e obtenção de sessão (mantido do seu original)
     const themeToggleBtn = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
     const body = document.body;
@@ -8,11 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function obterSessao() {
         const usuario = JSON.parse(localStorage.getItem("usuario"));
         const access_token = localStorage.getItem("access_token");
-        return { usuario, access_token };
+        const refresh_token = localStorage.getItem("refresh_token");
+        return { usuario, access_token, refresh_token };
     }
 
     const sessaoUsuario = obterSessao();
-
     if (userNameElement && sessaoUsuario.usuario) {
         userNameElement.textContent = `Olá, ${sessaoUsuario.usuario.nome}`;
     }
@@ -29,70 +28,120 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const savedTheme = localStorage.getItem('theme');
-    setTheme(savedTheme || 'light');
+    setTheme(localStorage.getItem('theme') || 'light');
     if(themeToggleBtn) {
         themeToggleBtn.addEventListener('click', () => {
-            const isDark = body.classList.contains('dark-theme');
-            setTheme(isDark ? 'light' : 'dark');
+            setTheme(body.classList.contains('dark-theme') ? 'light' : 'dark');
         });
     }
 
-    // --- Nova Lógica para Meus Treinos ---
+    // --- Função para fazer requisição com atualização de token ---
+    async function requestComToken(url, options = {}) {
+        let { access_token, refresh_token } = obterSessao();
 
-    function renderizarCardsTreinosInscritos(listaDeTreinos) {
+        if (!access_token || !refresh_token) {
+            throw new Error("Token não encontrado");
+        }
+
+        options.headers = {
+            ...options.headers,
+            "Authorization": `Bearer ${access_token}`,
+            "Content-Type": "application/json"
+        };
+
+        let response = await fetch(url, options);
+        let data = await response.json().catch(() => ({}));
+
+        if (response.status === 401 || (data.error && data.error.toLowerCase().includes("token"))) {
+            // renovar token
+            const novoAccess = await renovarToken(refresh_token);
+            if (!novoAccess) throw new Error("Token inválido ou expirado");
+
+            options.headers["Authorization"] = `Bearer ${novoAccess}`;
+            response = await fetch(url, options);
+            data = await response.json().catch(() => ({}));
+        }
+
+        return { response, data };
+    }
+
+    async function renovarToken(refresh_token) {
+        try {
+            const response = await fetch("http://127.0.0.1:8000/usuarios/refresh_token/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ refresh_token })
+            });
+
+            const data = await response.json();
+
+            if (data.result && data.result.access) {
+                localStorage.setItem("access_token", data.result.access);
+                return data.result.access;
+            }
+            return null;
+        } catch (err) {
+            console.error("Erro ao renovar token:", err);
+            return null;
+        }
+    }
+
+    function formatarDataBR(dataISO) {
+        if (!dataISO) return '';
+        const [ano, mes, dia] = dataISO.split('-');
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    // --- Renderização dos treinos ---
+    function renderizarCardsTreinosInscritos(listaDeTreinos, progressoUsuario = {}) {
         const container = document.getElementById('card-container');
         if (!container) return;
+        container.innerHTML = '';
 
-        container.innerHTML = ''; // Limpa o conteúdo para evitar duplicação
-
-        if (listaDeTreinos.length === 0) {
+        if (!listaDeTreinos || listaDeTreinos.length === 0) {
             container.innerHTML = '<p>Você ainda não está inscrito em nenhum treino.</p>';
             return;
         }
 
         listaDeTreinos.forEach(treino => {
+            // Calcula a porcentagem de progresso
+            const totalExercicios = treino.exercicios?.length || 0;
+            const exerciciosConcluidos = progressoUsuario[treino.id_treino] || 0;
+            const porcentagem = totalExercicios ? Math.round((exerciciosConcluidos / totalExercicios) * 100) : 0;
+
             const cardHTML = `
-                <div class="treino-card">
-                    <img src="${treino.url_imagem_treino}" alt="${treino.nome_treino}" class="card-image"/>
-                    <div class="card-content">
-                        <h2>${treino.nome_treino}</h2>
-                        <p>${treino.descricao_treino}</p>
-                        <a href="exercicios.html?id=${treino.id_treino}" class="card-link">Ver Treino</a>
+            <div class="treino-card">
+                <img src="${treino.url_imagem_treino}" alt="${treino.nome_treino}" class="card-image"/>
+                <div class="card-content">
+                    <h2>${treino.nome_treino}</h2>
+                    <p>${treino.descricao_treino}</p>
+                    <p>Data: ${formatarDataBR(treino.data)}</p>
+
+                    <!-- Barra de progresso -->
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${porcentagem}%;"></div>
                     </div>
+                    <p>${porcentagem}% concluído</p>
+
+                    <a href="exercicios.html?id=${treino.id_treino}" class="card-link">Ver Treino</a>
                 </div>
-            `;
+            </div>
+        `;
             container.innerHTML += cardHTML;
         });
     }
 
+    // --- Carregar treinos do usuário usando token ---
     async function carregarTreinosDoUsuario() {
         const container = document.getElementById('card-container');
         if (!container) return;
 
-        // O ID do usuário deve ser obtido da sessão
-        const { usuario, access_token } = obterSessao();
-        const userId = usuario?.id_usuario;
-
-        if (!userId || !access_token) {
-            container.innerHTML = '<p>Faça login para ver seus treinos.</p>';
-            return;
-        }
-
         try {
-            // Supondo que sua API tenha um endpoint para buscar treinos por ID do usuário
-            // Ex: http://127.0.0.1:8000/treinos/listar_treinos_por_usuario/1/
-            const res = await fetch(`http://127.0.0.1:8000/treinos/listar_treinos_por_usuario/${userId}/`, {
-                headers: {
-                    'Authorization': `Bearer ${access_token}`
-                }
-            });
+            const { response, data } = await requestComToken("http://127.0.0.1:8000/usuarios/treinos_usuario/");
 
-            if (!res.ok) throw new Error('Falha ao buscar os treinos do usuário');
+            if (!response.ok) throw new Error('Falha ao buscar os treinos do usuário');
 
-            const data = await res.json();
-            const listaDeTreinos = data.result;
-
+            const listaDeTreinos = data.result?.treinos || [];
             renderizarCardsTreinosInscritos(listaDeTreinos);
 
         } catch (error) {

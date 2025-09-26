@@ -60,8 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h2>${exercicio.nome_exercicio}</h2>
                     <p>${exercicio.series} séries de ${exercicio.repeticoes} repetições</p>
                     <p>${exercicio.descricao_exercicio}</p>
-                    ${exercicio.video_exercicio ? `<a href="${exercicio.video_exercicio}" target="_blank">Assistir vídeo</a>` : ''}
+                    ${exercicio.video_exercicio ? `<a href="${exercicio.video_exercicio}" target="_blank" style="color: #4a69bd; font-weight: bold">Assistir vídeo</a>` : ''}
                 `;
+
                 listaExerciciosEl.appendChild(exercicioCard);
             });
         } catch (error) {
@@ -69,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tituloTreinoEl.textContent = 'Erro ao carregar o treino.';
         }
     }
+
 
     // --- Botão de concluir treino ---
     if (completeWorkoutBtn) {
