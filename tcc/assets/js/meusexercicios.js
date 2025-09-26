@@ -145,15 +145,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Se existe botão, adiciona o evento de marcar como concluído
                 if (!exercicio.concluido) {
+                    console.log(exercicio.id_exercicio_usuario)
                     const btn = exercicioCard.querySelector('.btn-concluir-exercicio');
-                    btn.addEventListener('click', () => {
-                        exercicio.concluido = true;
-                        atualizarBarraProgresso(treino.exercicios.length, treino.exercicios.filter(e => e.concluido).length);
-                        // Substitui o botão pelo texto "Concluído"
-                        btn.replaceWith(document.createElement('p'));
-                        btn.parentElement.querySelector('p').textContent = 'Concluído';
-                        btn.parentElement.querySelector('p').style.fontWeight = 'bold';
-                        btn.parentElement.querySelector('p').style.color = 'green';
+                    btn.addEventListener('click', async () => {
+                        btn.disabled = true;
+                        btn.textContent = 'Atualizando...';
+
+                        try {
+                            const payload = {
+                                usuario_exercicio_id: exercicio.id_exercicio_usuario,
+                                concluido: true
+                            };
+
+                            const { response, data } = await requestComToken(
+                                'http://127.0.0.1:8000/usuarios/atualizar_status_exercicio/',
+                                {
+                                    method: 'PUT',
+                                    body: JSON.stringify(payload)
+                                }
+                            );
+
+                            if (response.ok) {
+                                exercicio.concluido = true;
+                                atualizarBarraProgresso(
+                                    treino.exercicios.length,
+                                    treino.exercicios.filter(e => e.concluido).length
+                                );
+
+                                // Substitui o botão pelo texto "Concluído"
+                                const p = document.createElement('p');
+                                p.textContent = 'Concluído';
+                                p.style.fontWeight = 'bold';
+                                p.style.color = 'green';
+                                btn.replaceWith(p);
+
+                            } else {
+                                mostrarNotificacao(`Erro ao atualizar exercício: ${data.error || 'Desconhecido'}`, 'erro');
+                                btn.disabled = false;
+                                btn.textContent = 'Marcar como concluído';
+                            }
+
+                        } catch (err) {
+                            mostrarNotificacao(`Erro de conexão: ${err.message}`, 'erro');
+                            btn.disabled = false;
+                            btn.textContent = 'Marcar como concluído';
+                        }
                     });
                 }
             });
