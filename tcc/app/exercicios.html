@@ -5,6 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/app.css">
     <title>Detalhes do Treino</title>
+    <style>
+    /* Container das Notificações - Fixo no canto inferior direito */
+    #notification-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+    }
+
+    /* Estilo Base da Notificação */
+    .notification {
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    /* ESSAS DUAS LINHAS SÃO CRUCIAIS PARA O DESAPARECIMENTO: */
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Define a duração da transição */
+    }
+
+    /* Estilo de Sucesso e Erro */
+    .notification.sucesso {
+    background-color: #4CAF50;
+    }
+
+    .notification.erro {
+    background-color: #f44336;
+    }
+
+    /* CLASSE QUE FAZ A MENSAGEM SUMIR */
+    .notification.hide {
+    opacity: 0;
+    transform: translateX(100%); /* Desliza para fora da tela */
+    }
+    </style>
 </head>
 <body>
     <header class="navbar">
@@ -21,7 +61,7 @@
     <main class="main-content">
         <h1 id="titulo-treino">Carregando treino...</h1>
         <div id="lista-exercicios"></div>
-        <button id="complete-workout-btn" class="cta-button">Marcar Treino como Concluído</button>
+        <button id="complete-workout-btn" class="cta-button">Registrar-se no treino</button>
     </main>
 
     <!-- ESTRUTURA DO MODAL (POP-UP) -->

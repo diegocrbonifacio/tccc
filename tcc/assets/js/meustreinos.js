@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <p>${porcentagem}% concluído</p>
 
-                    <a href="exercicios.html?id=${treino.id_treino}" class="card-link">Ver Treino</a>
+                    <a href="meusexercicios.html?id=${treino.id_treino_usuario}" class="card-link">Ver Treino</a>
                 </div>
             </div>
         `;
